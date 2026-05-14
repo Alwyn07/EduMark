@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduMark — College Mark Management</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F5F0;--surface:#FFF;--surface2:#F0EDE6;--surface3:#E8E4DC;
+  --border:#E2DDD5;--border2:#CCC8BF;
+  --text:#1A1814;--text2:#6B6760;--text3:#9E9A94;
+  --accent:#2C5F8A;--al:#EAF1F8;--ad:#1A3D5C;
+  --green:#1F7A4D;--gl:#E6F5EE;
+  --red:#B53B2F;--rl:#FCECEA;
+  --amber:#A0620A;--aml:#FEF3E2;
+  --r:10px;--rl2:16px;
+  --sh:0 1px 3px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.04);
+  --shm:0 2px 8px rgba(0,0,0,.10),0 8px 32px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+h1,h2,h3{font-family:'DM Serif Display',serif}
+input,select,textarea,button{font-family:'DM Sans',sans-serif}
+.page{display:none;min-height:100vh}
+.page.active{display:flex;flex-direction:column}
+
+/* LANDING */
+#pg-land{background:var(--bg)}
+.l-nav{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 2rem;border-bottom:1px solid var(--border);background:var(--surface)}
+.logo{font-family:'DM Serif Display',serif;font-size:1.4rem;letter-spacing:-.5px}
+.logo span{color:var(--accent)}
+.l-hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem 1.5rem;text-align:center}
+.l-hero h1{font-size:clamp(2rem,6vw,3.6rem);line-height:1.15;max-width:720px;margin-bottom:1rem}
+.l-hero h1 em{font-style:italic;color:var(--accent)}
+.l-hero p{font-size:1.05rem;color:var(--text2);max-width:500px;line-height:1.7;margin-bottom:2.5rem}
+.pcards{display:flex;gap:1.2rem;flex-wrap:wrap;justify-content:center;width:100%;max-width:640px}
+.pcard{flex:1;min-width:220px;background:var(--surface);border:1px solid var(--border);border-radius:var(--rl2);padding:2rem 1.5rem;cursor:pointer;transition:all .2s;text-align:left}
+.pcard:hover{border-color:var(--accent);box-shadow:var(--shm);transform:translateY(-2px)}
+.pcard .ic{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:1rem}
+.pcard.adm .ic{background:var(--al);color:var(--accent)}
+.pcard.stu .ic{background:var(--gl);color:var(--green)}
+.pcard h3{font-family:'DM Serif Display',serif;font-size:1.25rem;margin-bottom:.3rem}
+.pcard p{font-size:.82rem;color:var(--text2);line-height:1.5}
+.l-foot{padding:1.5rem 2rem;text-align:center;font-size:.8rem;color:var(--text3);border-top:1px solid var(--border)}
+
+/* AUTH */
+#pg-auth{background:var(--bg);align-items:center;justify-content:center;padding:1.5rem}
+.auth-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl2);padding:2.5rem 2rem;width:100%;max-width:420px;box-shadow:var(--shm)}
+.a-back{display:inline-flex;align-items:center;gap:6px;font-size:.83rem;color:var(--text2);cursor:pointer;margin-bottom:1.5rem;border:none;background:none;padding:0}
+.a-back:hover{color:var(--text)}
+.role-badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:.75rem;font-weight:500;margin-bottom:1rem}
+.role-badge.adm{background:var(--al);color:var(--accent)}
+.role-badge.stu{background:var(--gl);color:var(--green)}
+.auth-box h2{font-size:1.6rem;margin-bottom:.3rem}
+.auth-box .sub{font-size:.85rem;color:var(--text2);margin-bottom:1.8rem}
+.fld{margin-bottom:1.1rem}
+.fld label{display:block;font-size:.82rem;font-weight:500;color:var(--text2);margin-bottom:5px;letter-spacing:.02em}
+.fld input,.fld select{width:100%;padding:.65rem .85rem;border:1px solid var(--border);border-radius:var(--r);font-size:.9rem;background:var(--surface);color:var(--text);outline:none;transition:border-color .15s}
+.fld input:focus,.fld select:focus{border-color:var(--accent)}
+.btn-p{width:100%;padding:.75rem;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:.92rem;font-weight:500;cursor:pointer;transition:background .15s}
+.btn-p:hover{background:var(--ad)}
+.btn-p.g{background:var(--green)}.btn-p.g:hover{background:#165c3a}
+.a-err{background:var(--rl);color:var(--red);font-size:.82rem;padding:.6rem .85rem;border-radius:var(--r);margin-bottom:1rem;display:none}
+.hint{margin-top:1.2rem;padding:.75rem;background:var(--surface2);border-radius:var(--r);font-size:.78rem;color:var(--text2);line-height:1.6}
+.hint strong{color:var(--text)}
+.rem-row{display:flex;align-items:center;gap:8px;margin-bottom:1.1rem}
+.rem-row input[type=checkbox]{width:15px;height:15px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
+.rem-row label{font-size:.83rem;color:var(--text2);cursor:pointer;user-select:none}
+.rem-banner{background:var(--al);border:1px solid var(--border);border-radius:var(--r);padding:.65rem 1rem;margin-bottom:1rem;font-size:.82rem;color:var(--accent);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.rem-banner button{background:none;border:none;font-size:.78rem;color:var(--accent);cursor:pointer;text-decoration:underline;padding:0;white-space:nowrap}
+.step-dots{display:flex;gap:6px;justify-content:center;margin-bottom:1.5rem}
+.step-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);transition:background .2s}
+.step-dot.active{background:var(--green)}
+.reg-step{display:none}.reg-step.active{display:block}
+.progress-track{height:3px;background:var(--border);border-radius:2px;margin-bottom:1.5rem;overflow:hidden}
+.progress-fill-bar{height:100%;background:var(--green);border-radius:2px;transition:width .3s}
+
+/* LAYOUT */
+.app-layout{display:flex;flex:1;overflow:hidden;height:100vh}
+.sidebar{width:240px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sb-logo{padding:1.4rem 1.5rem 1rem;font-family:'DM Serif Display',serif;font-size:1.2rem;border-bottom:1px solid var(--border)}
+.sb-user{padding:1rem 1.5rem;border-bottom:1px solid var(--border)}
+.sb-user .nm{font-size:.88rem;font-weight:500}
+.sb-user .rl{font-size:.75rem;color:var(--text3);margin-top:1px}
+.nav-sec{padding:1rem .75rem .5rem}
+.nav-lbl{font-size:.68rem;font-weight:600;letter-spacing:.08em;color:var(--text3);padding:0 .75rem;margin-bottom:4px;text-transform:uppercase}
+.ni{display:flex;align-items:center;gap:10px;padding:.55rem .75rem;border-radius:8px;cursor:pointer;font-size:.87rem;color:var(--text2);transition:all .15s;border:none;background:none;width:100%;text-align:left}
+.ni:hover{background:var(--surface2);color:var(--text)}
+.ni.on{background:var(--al);color:var(--accent);font-weight:500}
+.ni.on.g{background:var(--gl);color:var(--green)}
+.ni svg{flex-shrink:0;opacity:.7}
+.ni.on svg{opacity:1}
+.sb-foot{margin-top:auto;padding:1rem 1.5rem;border-top:1px solid var(--border)}
+.lo-btn{display:flex;align-items:center;gap:8px;font-size:.83rem;color:var(--text2);cursor:pointer;border:none;background:none;padding:0}
+.lo-btn:hover{color:var(--red)}
+.main{flex:1;overflow-y:auto;background:var(--bg)}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+.tb-l{display:flex;align-items:center;gap:12px}
+.hbg{display:none;background:none;border:none;cursor:pointer;padding:4px}
+.tb-title{font-size:.95rem;font-weight:500}
+.tb-r{display:flex;align-items:center;gap:10px}
+.av{width:32px;height:32px;border-radius:50%;background:var(--al);color:var(--accent);font-size:.75rem;font-weight:600;display:flex;align-items:center;justify-content:center}
+.av.g{background:var(--gl);color:var(--green)}
+.content{padding:1.5rem}
+.panel{display:none}
+.panel.on{display:block}
+
+/* CLASS SWITCHER */
+.class-bar{display:flex;align-items:center;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap}
+.class-bar-label{font-size:.78rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-right:4px}
+.cls-pill{padding:5px 14px;border-radius:99px;font-size:.8rem;border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all .15s;white-space:nowrap}
+.cls-pill:hover{border-color:var(--accent);color:var(--accent)}
+.cls-pill.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.cls-pill.all-pill.active{background:var(--text);border-color:var(--text)}
+
+/* STATS */
+.srow{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1rem;margin-bottom:1.5rem}
+.sc{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl2);padding:1.2rem 1.25rem}
+.slb{font-size:.75rem;color:var(--text2);margin-bottom:6px;font-weight:500;letter-spacing:.02em}
+.sv{font-family:'DM Serif Display',serif;font-size:1.9rem;line-height:1}
+.sv.bl{color:var(--accent)}.sv.gn{color:var(--green)}.sv.rd{color:var(--red)}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl2);margin-bottom:1.2rem;overflow:hidden}
+.ch{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--border);gap:.5rem;flex-wrap:wrap}
+.ct{font-size:.92rem;font-weight:500}
+.cb{padding:1.25rem}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.83rem;min-width:480px}
+th{text-align:left;padding:.65rem .85rem;font-size:.73rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border);background:var(--surface2)}
+td{padding:.7rem .85rem;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--surface2)}
+.rc{font-weight:500;color:var(--accent);font-size:.78rem}
+
+/* BADGES */
+.badge{display:inline-block;padding:2px 9px;border-radius:99px;font-size:.72rem;font-weight:500}
+.badge.pass{background:var(--gl);color:var(--green)}
+.badge.fail{background:var(--rl);color:var(--red)}
+.badge.pending{background:var(--aml);color:var(--amber)}
+
+/* BUTTONS */
+.btn{padding:.6rem 1.1rem;border-radius:var(--r);font-size:.84rem;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text);transition:all .15s}
+.btn:hover{background:var(--surface2);border-color:var(--border2)}
+.btn.f{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.f:hover{background:var(--ad)}
+.btn.f.g{background:var(--green);border-color:var(--green)}.btn.f.g:hover{background:#165c3a}
+.btn.danger{background:var(--rl);color:var(--red);border-color:var(--red)}
+.btn.danger:hover{background:#f5d5d2}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* STATUS MESSAGES */
+.smsg{display:flex;align-items:flex-start;gap:8px;padding:.75rem 1rem;border-radius:var(--r);font-size:.83rem;margin:.75rem 0}
+.smsg.inf{background:var(--al);color:var(--accent)}
+.smsg.suc{background:var(--gl);color:var(--green)}
+.smsg.err{background:var(--rl);color:var(--red)}
+.smsg.wrn{background:var(--aml);color:var(--amber)}
+.spin{width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:sp .7s linear infinite;flex-shrink:0;margin-top:1px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.info-note{background:var(--aml);border-bottom:1px solid var(--border);padding:.7rem 1.25rem;font-size:.8rem;color:var(--amber);display:flex;align-items:center;gap:8px}
+
+/* SCAN */
+.drop-zone{border:1.5px dashed var(--border2);border-radius:var(--rl2);padding:3rem 2rem;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface2)}
+.drop-zone:hover,.drop-zone.over{border-color:var(--accent);background:var(--al)}
+.drop-zone p{font-size:.88rem;color:var(--text2)}
+.drop-zone span{font-size:.78rem;color:var(--text3);margin-top:4px;display:block}
+.prev-img{max-width:100%;max-height:260px;border-radius:var(--r);border:1px solid var(--border);display:block;margin:1rem auto;object-fit:contain}
+.act-row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem}
+
+/* SUBJECT MANAGEMENT */
+.subj-row{display:grid;grid-template-columns:90px 1fr 75px 85px 36px;gap:8px;align-items:center;padding:.65rem .85rem;border-bottom:1px solid var(--border);transition:background .1s}
+.subj-row:hover{background:var(--surface2)}
+.subj-row:last-child{border-bottom:none}
+.subj-row input{padding:.45rem .65rem;border:1px solid var(--border);border-radius:6px;font-size:.83rem;background:var(--surface);color:var(--text);outline:none;width:100%;transition:border-color .15s}
+.subj-row input:focus{border-color:var(--accent)}
+.subj-row input.ci{font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em}
+.del-btn{width:30px;height:30px;border-radius:6px;border:none;background:none;cursor:pointer;color:var(--text3);display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+.del-btn:hover{background:var(--rl);color:var(--red)}
+.subj-hdr{display:grid;grid-template-columns:90px 1fr 75px 85px 36px;gap:8px;padding:.5rem .85rem;background:var(--surface2);border-bottom:1px solid var(--border)}
+.subj-hdr span{font-size:.73rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--text3)}
+.add-row{display:flex;gap:.75rem;align-items:center;padding:1rem 1.25rem;border-top:1px solid var(--border);flex-wrap:wrap}
+.add-row input{padding:.55rem .75rem;border:1px solid var(--border);border-radius:var(--r);font-size:.84rem;background:var(--surface);color:var(--text);outline:none;transition:border-color .15s}
+.add-row input:focus{border-color:var(--accent)}
+.cnt-ctrl{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:4px}
+.cnt-ctrl button{width:28px;height:28px;border-radius:6px;border:none;background:var(--surface);cursor:pointer;font-size:1.1rem;line-height:1;color:var(--text);display:flex;align-items:center;justify-content:center;transition:background .15s}
+.cnt-ctrl button:hover{background:var(--border)}
+.cnt-ctrl span{min-width:28px;text-align:center;font-size:.92rem;font-weight:500}
+
+/* CLASSES MANAGEMENT */
+.class-list-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-bottom:1rem}
+.class-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl2);padding:1.1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.class-card .cname{font-weight:500;font-size:.9rem}
+.class-card .csub{font-size:.75rem;color:var(--text3);margin-top:2px}
+.class-card .c-actions{display:flex;gap:6px;flex-shrink:0}
+.class-card-add{border:1.5px dashed var(--border2);cursor:pointer;justify-content:center;color:var(--text2);font-size:.85rem;gap:8px;transition:all .15s}
+.class-card-add:hover{border-color:var(--accent);color:var(--accent);background:var(--al)}
+.new-class-form{background:var(--surface2);border:1px solid var(--border);border-radius:var(--rl2);padding:1.25rem;margin-bottom:1rem;display:none}
+.new-class-form.open{display:block}
+.ncf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.75rem;margin-bottom:.75rem}
+.ncf-grid input,.ncf-grid select{padding:.6rem .8rem;border:1px solid var(--border);border-radius:var(--r);font-size:.85rem;background:var(--surface);color:var(--text);outline:none;transition:border-color .15s;width:100%}
+.ncf-grid input:focus{border-color:var(--accent)}
+.ncf-actions{display:flex;gap:.75rem}
+
+/* STUDENT RESULT */
+.rh{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.rav{width:56px;height:56px;border-radius:50%;background:var(--gl);color:var(--green);font-family:'DM Serif Display',serif;font-size:1.4rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rname{font-family:'DM Serif Display',serif;font-size:1.4rem}
+.rroll{font-size:.82rem;color:var(--text2);margin-top:2px}
+.ob{margin-left:auto;padding:6px 16px;border-radius:99px;font-weight:600;font-size:.9rem}
+.ob.pass{background:var(--gl);color:var(--green)}
+.ob.fail{background:var(--rl);color:var(--red)}
+.sg{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:1rem}
+.scard{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl2);padding:1.2rem;position:relative;overflow:hidden}
+.scard::after{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.scard.pass::after{background:var(--green)}
+.scard.fail::after{background:var(--red)}
+.sn{font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text2);margin-bottom:.5rem}
+.sm{font-family:'DM Serif Display',serif;font-size:2rem;line-height:1}
+.sm .dn{font-size:1rem;color:var(--text3)}
+.spct{font-size:.8rem;color:var(--text2);margin-top:4px}
+.pb{height:4px;background:var(--border);border-radius:2px;margin-top:10px;overflow:hidden}
+.pf{height:100%;border-radius:2px;transition:width .6s}
+.pf.pass{background:var(--green)}.pf.fail{background:var(--red)}
+.etabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.2rem}
+.etab{padding:5px 14px;border-radius:99px;font-size:.8rem;border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all .15s}
+.etab.on{background:var(--green);color:#fff;border-color:var(--green)}
+
+/* INLINE FORM */
+.fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem}
+.fi label{display:block;font-size:.78rem;font-weight:500;color:var(--text2);margin-bottom:4px}
+.fi input,.fi select{width:100%;padding:.6rem .8rem;border:1px solid var(--border);border-radius:var(--r);font-size:.85rem;background:var(--surface);color:var(--text);outline:none;transition:border-color .15s}
+.fi input:focus,.fi select:focus{border-color:var(--accent)}
+
+/* FIRST LOGIN OVERLAY */
+#pg-register{background:var(--bg);align-items:center;justify-content:center;padding:1.5rem}
+.reg-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl2);padding:2.5rem 2rem;width:100%;max-width:480px;box-shadow:var(--shm)}
+.reg-box h2{font-size:1.5rem;margin-bottom:.25rem}
+.reg-box .sub{font-size:.85rem;color:var(--text2);margin-bottom:1.5rem}
+
+/* MOBILE */
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:40}
+@media(max-width:700px){
+  .sidebar{position:fixed;left:-260px;top:0;bottom:0;z-index:50;transition:left .25s;box-shadow:var(--shm)}
+  .sidebar.open{left:0}
+  .sb-overlay.open{display:block}
+  .hbg{display:flex}
+  .main{width:100%}
+  .content{padding:1rem}
+  .srow{grid-template-columns:repeat(2,1fr)}
+  .pcards{flex-direction:column}
+  .sg{grid-template-columns:repeat(2,1fr)}
+  .auth-box{padding:2rem 1.25rem}
+  .subj-row,.subj-hdr{grid-template-columns:75px 1fr 65px 78px 28px}
+  .class-list-grid{grid-template-columns:1fr}
+}
+@media(max-width:400px){
+  .srow{grid-template-columns:1fr 1fr}
+  .sg{grid-template-columns:1fr 1fr}
+}
+.empty{text-align:center;padding:3rem 1rem;color:var(--text3);font-size:.88rem}
+
+/* ADMIN REGISTRATION */
+#pg-adm-reg{background:var(--bg);align-items:center;justify-content:center;padding:1.5rem}
+.adm-reg-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl2);padding:2.5rem 2rem;width:100%;max-width:420px;box-shadow:var(--shm)}
+.adm-reg-box h2{font-size:1.5rem;margin-bottom:.25rem}
+.adm-reg-box .sub{font-size:.85rem;color:var(--text2);margin-bottom:1.5rem}
+
+/* MARKS EDIT MODAL */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;display:flex;align-items:center;justify-content:center;padding:1rem}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl2);width:100%;max-width:560px;box-shadow:var(--shm);max-height:90vh;overflow-y:auto}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:1}
+.modal-hdr h3{font-family:'DM Serif Display',serif;font-size:1.2rem}
+.modal-close{background:none;border:none;cursor:pointer;color:var(--text2);font-size:1.3rem;line-height:1;padding:4px;border-radius:6px}
+.modal-close:hover{background:var(--surface2);color:var(--text)}
+.modal-body{padding:1.5rem}
+.mark-edit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1rem;margin-bottom:1.25rem}
+.mef{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:.85rem 1rem}
+.mef label{display:block;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text2);margin-bottom:6px}
+.mef input{width:100%;padding:.5rem .7rem;border:1px solid var(--border);border-radius:6px;font-size:1rem;font-weight:500;background:var(--surface);color:var(--text);outline:none;transition:border-color .15s;text-align:center}
+.mef input:focus{border-color:var(--accent)}
+.mef .mef-pass{font-size:.72rem;margin-top:4px;text-align:center}
+.mef .mef-pass.ok{color:var(--green)}.mef .mef-pass.no{color:var(--red)}
+.exam-select-row{display:flex;gap:.75rem;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap}
+.exam-select-row label{font-size:.82rem;font-weight:500;color:var(--text2);white-space:nowrap}
+.exam-select-row select{padding:.55rem .8rem;border:1px solid var(--border);border-radius:var(--r);font-size:.85rem;background:var(--surface);color:var(--text);outline:none;flex:1;min-width:160px}
+.exam-select-row select:focus{border-color:var(--accent)}
+.add-exam-row{display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;padding:.85rem 1rem;background:var(--surface2);border-radius:var(--r);margin-bottom:1rem}
+.add-exam-row input{padding:.5rem .75rem;border:1px solid var(--border);border-radius:var(--r);font-size:.84rem;background:var(--surface);color:var(--text);outline:none;flex:1;min-width:120px}
+.add-exam-row input:focus{border-color:var(--accent)}
+.stu-info-strip{background:var(--gl);border-radius:var(--r);padding:.65rem 1rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+.stu-info-strip .sil{font-size:.8rem;color:var(--green)}
+.stu-info-strip .siv{font-size:.82rem;font-weight:500;color:var(--green)}
+
+/* ADMIN MANAGEMENT PANEL */
+.admin-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem;margin-bottom:1rem}
+.admin-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl2);padding:1.1rem 1.25rem;display:flex;align-items:center;gap:.85rem}
+.admin-av{width:40px;height:40px;border-radius:50%;background:var(--al);color:var(--accent);font-weight:600;font-size:.85rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.admin-card .anm{font-size:.9rem;font-weight:500}
+.admin-card .adpt{font-size:.75rem;color:var(--text3);margin-top:2px}
+.admin-card .adel{margin-left:auto}
+</style>
+</head>
+<body>
+
+<!-- LANDING -->
+<div id="pg-land" class="page active">
+  <nav class="l-nav"><div class="logo">Edu<span>Mark</span></div></nav>
+  <div class="l-hero">
+    <h1>Mark management for<br><em>modern colleges.</em></h1>
+    <p>AI-powered mark sheet scanning, subject-wise results, and instant access for every student — organised by class.</p>
+    <div class="pcards">
+      <div class="pcard adm" onclick="openAuth('adm')">
+        <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2z"/><path d="M2 20c0-4 4.5-7 10-7s10 3 10 7"/><path d="M19 8v6M22 11h-6"/></svg></div>
+        <h3>Admin portal</h3>
+        <p>Manage classes, scan mark sheets, configure subjects and view all student results.</p>
+      </div>
+      <div class="pcard stu" onclick="openAuth('stu')">
+        <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+        <h3>Student portal</h3>
+        <p>View your subject-wise marks and overall performance. First visit? Register here.</p>
+      </div>
+    </div>
+  </div>
+  <div class="l-foot">EduMark · College Mark Management System</div>
+</div>
+
+<!-- AUTH -->
+<div id="pg-auth" class="page">
+  <div class="auth-box">
+    <button class="a-back" onclick="goLand()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg> Back</button>
+    <div id="a-badge" class="role-badge adm">Admin login</div>
+    <h2 id="a-title">Welcome back</h2>
+    <p class="sub" id="a-sub">Sign in to manage classes and mark sheets.</p>
+    <div id="a-rem-banner" class="rem-banner" style="display:none">
+      <span id="a-rem-txt"></span>
+      <button onclick="forgetSess()">Switch account</button>
+    </div>
+    <div id="a-err" class="a-err">Incorrect credentials. Please try again.</div>
+    <div id="a-fields">
+      <div class="fld"><label id="a-id-lbl">Username</label><input type="text" id="a-user" placeholder="Enter username"></div>
+      <div class="fld"><label>Password</label><input type="password" id="a-pass" placeholder="Enter password"></div>
+      <div class="rem-row"><input type="checkbox" id="a-rem" checked><label for="a-rem">Remember me on this device</label></div>
+    </div>
+    <button class="btn-p" id="a-btn" onclick="doLogin()" data-role="adm">Sign in</button>
+    <div class="hint" id="a-hint"></div>
+  </div>
+</div>
+
+<!-- FIRST-TIME STUDENT REGISTRATION -->
+<div id="pg-register" class="page">
+  <div class="reg-box">
+    <div class="role-badge stu" style="margin-bottom:.75rem">New student registration</div>
+    <h2>Create your account</h2>
+    <p class="sub">Complete these steps to set up your student profile.</p>
+    <div class="progress-track"><div class="progress-fill-bar" id="reg-progress" style="width:33%"></div></div>
+    <div class="step-dots">
+      <div class="step-dot active" id="dot-1"></div>
+      <div class="step-dot" id="dot-2"></div>
+      <div class="step-dot" id="dot-3"></div>
+    </div>
+    <!-- Step 1: Identity -->
+    <div class="reg-step active" id="reg-s1">
+      <div style="font-size:.78rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.75rem">Step 1 of 3 — Your identity</div>
+      <div class="fld"><label>Full name</label><input type="text" id="r-name" placeholder="e.g. Arun Kumar"></div>
+      <div class="fld"><label>Roll number</label><input type="text" id="r-roll" placeholder="As given by your college"></div>
+      <div id="r-s1-err" class="a-err"></div>
+      <button class="btn-p g" onclick="regNext(1)">Continue →</button>
+    </div>
+    <!-- Step 2: Class -->
+    <div class="reg-step" id="reg-s2">
+      <div style="font-size:.78rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.75rem">Step 2 of 3 — Your class</div>
+      <div class="fld"><label>Department / Programme</label><select id="r-dept"><option value="">Select department…</option></select></div>
+      <div class="fld"><label>Class / Section</label><select id="r-class"><option value="">Select class…</option></select></div>
+      <div id="r-s2-err" class="a-err"></div>
+      <div style="display:flex;gap:.75rem">
+        <button class="btn" onclick="regBack(2)" style="flex:0 0 auto">← Back</button>
+        <button class="btn-p g" onclick="regNext(2)" style="flex:1">Continue →</button>
+      </div>
+    </div>
+    <!-- Step 3: Password -->
+    <div class="reg-step" id="reg-s3">
+      <div style="font-size:.78rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.75rem">Step 3 of 3 — Set your password</div>
+      <div class="fld"><label>Create password</label><input type="password" id="r-pw1" placeholder="Min. 6 characters"></div>
+      <div class="fld"><label>Confirm password</label><input type="password" id="r-pw2" placeholder="Repeat your password"></div>
+      <div id="r-s3-err" class="a-err"></div>
+      <div style="display:flex;gap:.75rem">
+        <button class="btn" onclick="regBack(3)" style="flex:0 0 auto">← Back</button>
+        <button class="btn-p g" onclick="regSubmit()" style="flex:1">Create account</button>
+      </div>
+    </div>
+    <button class="a-back" onclick="goLand()" style="margin-top:1.25rem;display:flex">← Back to home</button>
+  </div>
+</div>
+
+<!-- ADMIN APP -->
+<div id="pg-adm" class="page">
+  <div class="sb-overlay" id="adm-ov" onclick="closeSB('adm')"></div>
+  <div class="app-layout">
+    <aside class="sidebar" id="adm-sb">
+      <div class="sb-logo">Edu<span style="color:var(--accent)">Mark</span></div>
+      <div class="sb-user"><div class="nm">Administrator</div><div class="rl">Admin account</div></div>
+      <div class="nav-sec">
+        <div class="nav-lbl">Menu</div>
+        <button class="ni on" onclick="aN('dash',this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</button>
+        <button class="ni" onclick="aN('classes',this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Classes</button>
+        <button class="ni" onclick="aN('scan',this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/></svg>Scan mark sheet</button>
+        <button class="ni" onclick="aN('students',this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Students</button>
+        <button class="ni" onclick="aN('subjects',this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Subjects</button>
+        <button class="ni" onclick="aN('admins',this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/><path d="M16 11l1.5 1.5L20 10"/></svg>Admins</button>
+      </div>
+      <div class="sb-foot"><button class="lo-btn" onclick="logout()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign out</button></div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="tb-l">
+          <button class="hbg" onclick="openSB('adm')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+          <span class="tb-title" id="adm-tt">Dashboard</span>
+        </div>
+        <div class="tb-r"><div class="av">AD</div></div>
+      </div>
+      <div class="content">
+
+        <!-- DASHBOARD -->
+        <div id="adm-dash" class="panel on">
+          <div class="class-bar" id="dash-class-bar"></div>
+          <div class="srow">
+            <div class="sc"><div class="slb">Total students</div><div class="sv bl" id="ds-tot">0</div></div>
+            <div class="sc"><div class="slb">Passed</div><div class="sv gn" id="ds-pass">0</div></div>
+            <div class="sc"><div class="slb">Failed</div><div class="sv rd" id="ds-fail">0</div></div>
+            <div class="sc"><div class="slb">Average %</div><div class="sv" id="ds-avg">—</div></div>
+          </div>
+          <div class="card">
+            <div class="ch"><span class="ct">Recent mark entries</span><button class="btn f" onclick="aN('scan',document.querySelector('#adm-sb .ni:nth-child(3)'))">+ Scan new</button></div>
+            <div class="tw"><table><thead><tr><th>Roll no.</th><th>Name</th><th>Class</th><th>Exam</th><th>Avg %</th><th>Result</th></tr></thead><tbody id="dash-tb"></tbody></table></div>
+          </div>
+        </div>
+
+        <!-- CLASSES -->
+        <div id="adm-classes" class="panel">
+          <div class="srow">
+            <div class="sc"><div class="slb">Total classes</div><div class="sv bl" id="cls-count">0</div></div>
+            <div class="sc"><div class="slb">Departments</div><div class="sv" id="dept-count">0</div></div>
+            <div class="sc"><div class="slb">Total students</div><div class="sv" id="cls-stu-count">0</div></div>
+          </div>
+          <div id="new-class-form" class="new-class-form">
+            <div style="font-size:.9rem;font-weight:500;margin-bottom:1rem">Add new class</div>
+            <div class="ncf-grid">
+              <div><label style="font-size:.78rem;font-weight:500;color:var(--text2);margin-bottom:4px;display:block">Department</label><input type="text" id="nc-dept" placeholder="e.g. Computer Science"></div>
+              <div><label style="font-size:.78rem;font-weight:500;color:var(--text2);margin-bottom:4px;display:block">Class / Section name</label><input type="text" id="nc-name" placeholder="e.g. CS-A (2nd Year)"></div>
+              <div><label style="font-size:.78rem;font-weight:500;color:var(--text2);margin-bottom:4px;display:block">Year / Semester</label><input type="text" id="nc-year" placeholder="e.g. 2nd Year"></div>
+            </div>
+            <div id="nc-err" class="a-err" style="margin-bottom:.75rem"></div>
+            <div class="ncf-actions">
+              <button class="btn f g" onclick="addClass()">Add class</button>
+              <button class="btn" onclick="toggleNewClassForm(false)">Cancel</button>
+            </div>
+          </div>
+          <div class="class-list-grid" id="class-list-grid"></div>
+          <div id="cls-msg"></div>
+        </div>
+
+        <!-- SCAN -->
+        <div id="adm-scan" class="panel">
+          <div class="card">
+            <div class="ch"><span class="ct">Upload mark sheet image</span></div>
+            <div class="cb">
+              <div class="fg" style="margin-bottom:1rem">
+                <div class="fi"><label>Exam name</label><select id="sc-exam"><option value="Term 1 2025">Term 1 – 2025</option><option value="Term 2 2025">Term 2 – 2025</option><option value="Annual 2025">Annual – 2025</option></select></div>
+                <div class="fi"><label>Class</label><select id="sc-class"></select></div>
+              </div>
+              <div class="drop-zone" id="sc-drop" onclick="document.getElementById('sc-file').click()" ondragover="doDrag(event,true)" ondragleave="doDrag(event,false)" ondrop="doDrop(event)">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto .75rem;display:block;opacity:.35"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/><circle cx="6.5" cy="6" r="1"/></svg>
+                <p>Click to upload or drag & drop a mark sheet photo</p>
+                <span>JPG, PNG, WEBP — printed or handwritten</span>
+              </div>
+              <input type="file" id="sc-file" accept="image/*" style="display:none" onchange="onScanFile(event)">
+              <img id="sc-prev" class="prev-img" style="display:none">
+              <div id="sc-stat"></div>
+              <div class="act-row">
+                <button class="btn f" id="sc-btn" disabled onclick="doScan()">Extract marks with AI</button>
+                <button class="btn" onclick="clearScan()">Clear</button>
+              </div>
+            </div>
+          </div>
+          <div id="sc-res-wrap" style="display:none">
+            <div class="card">
+              <div class="ch"><span class="ct" id="sc-res-title">Extracted results</span><button class="btn f g" onclick="saveScanned()">Save to database</button></div>
+              <div class="tw"><table><thead><tr><th>Roll no.</th><th>Name</th><th>Subject</th><th>Marks</th><th>Max</th><th>%</th><th>Result</th></tr></thead><tbody id="sc-res-body"></tbody></table></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STUDENTS -->
+        <div id="adm-students" class="panel">
+          <div class="class-bar" id="stu-class-bar"></div>
+          <div style="display:flex;gap:.75rem;align-items:center;margin-bottom:1rem;flex-wrap:wrap">
+            <input type="text" id="st-srch" placeholder="Search by name or roll no…" style="flex:1;min-width:180px;padding:.6rem .85rem;border:1px solid var(--border);border-radius:var(--r);font-size:.85rem;background:var(--surface);outline:none" oninput="renderStudents()">
+            <select id="st-filt" style="padding:.6rem .85rem;border:1px solid var(--border);border-radius:var(--r);font-size:.85rem;background:var(--surface);outline:none" onchange="renderStudents()">
+              <option value="all">All</option><option value="pass">Pass</option><option value="fail">Fail</option>
+            </select>
+          </div>
+          <div class="card">
+            <div class="tw"><table><thead><tr><th>Roll no.</th><th>Name</th><th>Class</th><th>Department</th><th>Avg %</th><th>Result</th><th style="min-width:80px"></th></tr></thead><tbody id="st-body"></tbody></table></div>
+          </div>
+        </div>
+
+        <!-- SUBJECTS -->
+        <div id="adm-subjects" class="panel">
+          <div class="srow">
+            <div class="sc"><div class="slb">Total subjects</div><div class="sv bl" id="subj-count-stat">0</div></div>
+            <div class="sc"><div class="slb">Total mark entries</div><div class="sv" id="subj-entries-stat">0</div></div>
+          </div>
+          <div class="card" style="margin-bottom:1rem">
+            <div class="ch"><span class="ct">Number of subjects</span></div>
+            <div class="cb" style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap">
+              <div>
+                <p style="font-size:.83rem;color:var(--text2);margin-bottom:.75rem">Use the counter to set how many subjects to track, or use + Add subject below.</p>
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div class="cnt-ctrl">
+                    <button onclick="changeSubjCount(-1)">−</button>
+                    <span id="subj-cnt-disp">5</span>
+                    <button onclick="changeSubjCount(1)">+</button>
+                  </div>
+                  <span style="font-size:.83rem;color:var(--text2)">subjects</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="ch"><span class="ct">Subject list & pass marks</span><button class="btn f" onclick="saveSubjects()">Save all changes</button></div>
+            <div class="info-note"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Edit subject codes, names, max marks and minimum pass marks. Click "Save all changes" to apply.</div>
+            <div class="subj-hdr"><span>Code</span><span>Subject name</span><span>Max</span><span>Min pass</span><span></span></div>
+            <div id="subj-list"></div>
+            <div class="add-row">
+              <input type="text" id="new-code" placeholder="Code (e.g. PHY)" style="width:110px;text-transform:uppercase">
+              <input type="text" id="new-name" placeholder="Subject name" style="flex:1;min-width:140px">
+              <input type="number" id="new-max" placeholder="Max" style="width:75px" value="100">
+              <input type="number" id="new-pass" placeholder="Pass" style="width:75px" value="35">
+              <button class="btn f" onclick="addSubject()">+ Add</button>
+            </div>
+          </div>
+          <div id="subj-save-msg"></div>
+        </div>
+
+        <!-- ADMINS -->
+        <div id="adm-admins" class="panel">
+          <div class="srow">
+            <div class="sc"><div class="slb">Total admins</div><div class="sv bl" id="adm-count-stat">0</div></div>
+          </div>
+          <div class="admin-list" id="admin-list"></div>
+          <div id="adm-list-msg"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STUDENT APP -->
+<div id="pg-stu" class="page">
+  <div class="sb-overlay" id="stu-ov-el" onclick="closeSB('stu')"></div>
+  <div class="app-layout">
+    <aside class="sidebar" id="stu-sb">
+      <div class="sb-logo">Edu<span style="color:var(--green)">Mark</span></div>
+      <div class="sb-user"><div class="nm" id="stu-sb-nm">Student</div><div class="rl" id="stu-sb-rl">Roll no. —</div></div>
+      <div class="nav-sec">
+        <div class="nav-lbl">My results</div>
+        <button class="ni on" onclick="sN('ov',this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Overview</button>
+        <button class="ni" onclick="sN('subj',this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Subject marks</button>
+        <button class="ni" onclick="sN('hist',this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>Exam history</button>
+      </div>
+      <div class="sb-foot"><button class="lo-btn" onclick="logout()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign out</button></div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="tb-l">
+          <button class="hbg" onclick="openSB('stu')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+          <span class="tb-title" id="stu-tt">My overview</span>
+        </div>
+        <div class="tb-r"><div class="av g" id="stu-av">ST</div></div>
+      </div>
+      <div class="content">
+        <!-- OVERVIEW -->
+        <div id="stu-ov" class="panel on">
+          <div class="rh">
+            <div class="rav" id="stu-rav">A</div>
+            <div><div class="rname" id="stu-rname">Student</div><div class="rroll" id="stu-rroll">—</div></div>
+            <div class="ob pass" id="stu-ob">Pass</div>
+          </div>
+          <div class="srow">
+            <div class="sc"><div class="slb">Total marks</div><div class="sv bl" id="stu-tot">—</div></div>
+            <div class="sc"><div class="slb">Percentage</div><div class="sv" id="stu-pct">—</div></div>
+            <div class="sc"><div class="slb">Subjects</div><div class="sv" id="stu-scount">—</div></div>
+            <div class="sc"><div class="slb">Class rank</div><div class="sv bl" id="stu-rank">—</div></div>
+          </div>
+          <div class="card">
+            <div class="ch"><span class="ct">Subject-wise summary</span></div>
+            <div class="tw"><table><thead><tr><th>Subject</th><th>Marks</th><th>Max</th><th>%</th><th>Min to pass</th><th>Result</th></tr></thead><tbody id="stu-sum-body"></tbody></table></div>
+          </div>
+        </div>
+        <!-- SUBJECTS -->
+        <div id="stu-subj" class="panel">
+          <div class="etabs" id="stu-etabs"></div>
+          <div class="sg" id="stu-sg"></div>
+        </div>
+        <!-- HISTORY -->
+        <div id="stu-hist" class="panel">
+          <div class="card">
+            <div class="ch"><span class="ct">All exam records</span></div>
+            <div class="tw"><table><thead><tr><th>Exam</th><th>Year</th><th>Total marks</th><th>%</th><th>Result</th></tr></thead><tbody id="stu-hist-body"></tbody></table></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN REGISTRATION -->
+<div id="pg-adm-reg" class="page">
+  <div class="adm-reg-box">
+    <button class="a-back" onclick="goLand()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg> Back</button>
+    <div class="role-badge adm" style="margin-bottom:.75rem">New admin registration</div>
+    <h2>Create admin account</h2>
+    <p class="sub">Set up your administrator profile to manage mark sheets and student records.</p>
+    <div id="ar-err" class="a-err"></div>
+    <div class="fld"><label>Full name</label><input type="text" id="ar-name" placeholder="e.g. Dr. Meena Iyer"></div>
+    <div class="fld"><label>Username <span style="font-size:.75rem;color:var(--text3)">(used to log in)</span></label><input type="text" id="ar-user" placeholder="e.g. meena.iyer" autocomplete="username"></div>
+    <div class="fld"><label>Department</label><input type="text" id="ar-dept" placeholder="e.g. Computer Science"></div>
+    <div class="fld"><label>Password</label><input type="password" id="ar-pw1" placeholder="Min. 6 characters"></div>
+    <div class="fld"><label>Confirm password</label><input type="password" id="ar-pw2" placeholder="Repeat password"></div>
+    <button class="btn-p" onclick="submitAdminReg()">Create admin account</button>
+    <div class="hint" style="margin-top:1rem">Already have an account? <a href="#" onclick="openAuth('adm');return false;" style="color:var(--accent);font-weight:500">Sign in →</a></div>
+  </div>
+</div>
+
+<!-- MARKS EDIT MODAL -->
+<div id="marks-modal" class="modal-backdrop" style="display:none" onclick="closeMarksModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-hdr">
+      <h3 id="mm-title">Edit marks</h3>
+      <button class="modal-close" onclick="closeMarksModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="stu-info-strip">
+        <div><div class="sil">Student</div><div class="siv" id="mm-stuname">—</div></div>
+        <div><div class="sil">Roll no.</div><div class="siv" id="mm-roll">—</div></div>
+        <div><div class="sil">Class</div><div class="siv" id="mm-class">—</div></div>
+      </div>
+      <div class="exam-select-row">
+        <label>Exam:</label>
+        <select id="mm-exam-sel" onchange="loadExamMarks()"></select>
+      </div>
+      <div class="add-exam-row">
+        <input type="text" id="mm-new-exam" placeholder="New exam name (e.g. Term 3 2025)">
+        <button class="btn f" onclick="addExamToStudent()">+ Add exam</button>
+      </div>
+      <div class="mark-edit-grid" id="mm-marks-grid"></div>
+      <div id="mm-msg"></div>
+      <div style="display:flex;gap:.75rem;justify-content:flex-end;flex-wrap:wrap">
+        <button class="btn" onclick="closeMarksModal()">Cancel</button>
+        <button class="btn f" onclick="saveEditedMarks()">Save marks</button>
+        <button class="btn danger" id="mm-del-exam-btn" onclick="deleteExamEntry()">Delete this exam</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// ══════════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════════
+// Multi-admin support — stored in localStorage
+const DEFAULT_ADMINS = [
+  { id:'adm-0', username:'admin', name:'Super Admin', dept:'Administration', password:'admin123' }
+];
+let ADMINS = JSON.parse(localStorage.getItem('em_admins')||'null') || DEFAULT_ADMINS;
+function saveAdmins(){ localStorage.setItem('em_admins', JSON.stringify(ADMINS)); }
+
+const DEFAULT_SUBJECTS = [
+  { code:'MAT', name:'Mathematics',      max:100, pass:35 },
+  { code:'SCI', name:'Science',          max:100, pass:35 },
+  { code:'ENG', name:'English',          max:100, pass:40 },
+  { code:'SOC', name:'Social Studies',   max:100, pass:35 },
+  { code:'CS',  name:'Computer Science', max:100, pass:40 },
+];
+let SUBJECTS = JSON.parse(localStorage.getItem('em_subjects')||'null') || DEFAULT_SUBJECTS;
+
+const DEFAULT_CLASSES = [
+  { id:'cls-1', dept:'Computer Science', name:'CS-A (1st Year)', year:'1st Year' },
+  { id:'cls-2', dept:'Computer Science', name:'CS-B (1st Year)', year:'1st Year' },
+  { id:'cls-3', dept:'Electronics',      name:'ECE-A (2nd Year)', year:'2nd Year' },
+  { id:'cls-4', dept:'Mathematics',      name:'MSc-A (1st Year)', year:'1st Year' },
+];
+let CLASSES = JSON.parse(localStorage.getItem('em_classes')||'null') || DEFAULT_CLASSES;
+
+const DEFAULT_DB = {
+  students:[
+    { roll:'CS101', name:'Arun Kumar',   classId:'cls-1', password:'pass123', marks:[{ exam:'Term 1 2025', MAT:78, SCI:82, ENG:74, SOC:69, CS:90 },{ exam:'Term 2 2025', MAT:81, SCI:79, ENG:77, SOC:73, CS:88 }]},
+    { roll:'CS102', name:'Priya Nair',   classId:'cls-1', password:'pass123', marks:[{ exam:'Term 1 2025', MAT:55, SCI:60, ENG:71, SOC:58, CS:63 }]},
+    { roll:'CS201', name:'Rahul Menon',  classId:'cls-2', password:'pass123', marks:[{ exam:'Term 1 2025', MAT:92, SCI:88, ENG:85, SOC:80, CS:95 }]},
+    { roll:'ECE101',name:'Sneha Thomas', classId:'cls-3', password:'pass123', marks:[{ exam:'Term 1 2025', MAT:30, SCI:28, ENG:40, SOC:35, CS:32 }]},
+    { roll:'MSC101',name:'Vivek Pillai', classId:'cls-4', password:'pass123', marks:[{ exam:'Term 1 2025', MAT:67, SCI:72, ENG:68, SOC:61, CS:75 }]},
+  ]
+};
+let db = JSON.parse(localStorage.getItem('em_db')||'null') || DEFAULT_DB;
+let cur = null;
+let scanB64=null, scanFile=null, scanned=[];
+let activeAdminClass='all', activeStuClass='all';
+
+function saveDB()   { localStorage.setItem('em_db',   JSON.stringify(db)); }
+function saveSubs() { localStorage.setItem('em_subjects', JSON.stringify(SUBJECTS)); }
+function saveCls()  { localStorage.setItem('em_classes',  JSON.stringify(CLASSES)); }
+
+// ══════════════════════════════════════════
+//  SESSION
+// ══════════════════════════════════════════
+function saveSess(role,id){ localStorage.setItem('em_sess',JSON.stringify({role,id,ts:Date.now()})); }
+function clearSess(){ localStorage.removeItem('em_sess'); }
+function loadSess(){
+  try{
+    const s=JSON.parse(localStorage.getItem('em_sess')||'null');
+    if(!s) return null;
+    if(Date.now()-s.ts>30*24*60*60*1000){ clearSess(); return null; }
+    return s;
+  }catch{ return null; }
+}
+
+// ══════════════════════════════════════════
+//  PAGES
+// ══════════════════════════════════════════
+function show(id){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+function goLand(){ show('pg-land'); }
+
+function openAuth(role){
+  const isAdm=role==='adm';
+  document.getElementById('a-badge').textContent = isAdm?'Admin login':'Student login';
+  document.getElementById('a-badge').className   = 'role-badge '+role;
+  document.getElementById('a-title').textContent = isAdm?'Admin sign in':'Student sign in';
+  document.getElementById('a-sub').textContent   = isAdm?'Sign in to manage classes and mark sheets.':'Enter your roll number and password to view your marks.';
+  document.getElementById('a-id-lbl').textContent= isAdm?'Username':'Roll number';
+  document.getElementById('a-user').placeholder  = isAdm?'e.g. admin (your username)':'e.g. CS101';
+  document.getElementById('a-btn').className     = 'btn-p'+(isAdm?'':' g');
+  document.getElementById('a-err').style.display = 'none';
+  document.getElementById('a-user').value=''; document.getElementById('a-pass').value='';
+  document.getElementById('a-hint').innerHTML = isAdm
+    ? '<strong>Demo credentials</strong><br>Username: <strong>admin</strong> / Password: <strong>admin123</strong><br><br>New admin? <a href="#" onclick="startAdminReg();return false;" style="color:var(--accent);font-weight:500">Register here →</a>'
+    : '<strong>Demo students</strong><br>Roll <strong>CS101</strong>–<strong>CS102</strong>, <strong>ECE101</strong>, etc. / Password: <strong>pass123</strong><br><br>New student? <a href="#" onclick="startRegister();return false;" style="color:var(--green);font-weight:500">Register here →</a>';
+  document.getElementById('a-btn').dataset.role=role;
+  const sess=loadSess();
+  const remB=document.getElementById('a-rem-banner');
+  const flds=document.getElementById('a-fields');
+  const btn =document.getElementById('a-btn');
+  if(sess&&sess.role===role){
+    let nm=sess.role==='adm'?(()=>{ const a=ADMINS.find(x=>x.username===sess.id); return a?a.name+' (Admin)':'Administrator'; })():(()=>{ const s=db.students.find(x=>x.roll===sess.id); return s?s.name+' ('+sess.id+')':'Roll '+sess.id; })();
+    document.getElementById('a-rem-txt').textContent='Welcome back, '+nm;
+    remB.style.display='flex'; flds.style.display='none'; btn.textContent='Continue'; btn.dataset.rem='1';
+  } else {
+    remB.style.display='none'; flds.style.display='block'; btn.textContent='Sign in'; btn.dataset.rem='';
+  }
+  show('pg-auth');
+}
+
+function forgetSess(){
+  clearSess();
+  document.getElementById('a-rem-banner').style.display='none';
+  document.getElementById('a-fields').style.display='block';
+  const btn=document.getElementById('a-btn'); btn.textContent='Sign in'; btn.dataset.rem='';
+}
+
+function doLogin(){
+  const btn=document.getElementById('a-btn');
+  const role=btn.dataset.role;
+  const err=document.getElementById('a-err');
+  err.style.display='none';
+  if(btn.dataset.rem==='1'){
+    const s=loadSess();
+    if(s&&s.role===role){ loginOK(role,s.id); return; }
+    forgetSess(); return;
+  }
+  const id=document.getElementById('a-user').value.trim();
+  const pw=document.getElementById('a-pass').value;
+  const rem=document.getElementById('a-rem').checked;
+  if(role==='adm'){
+    const adm=ADMINS.find(a=>a.username===id&&a.password===pw);
+    if(adm){ if(rem) saveSess('adm',id); loginOK('adm',id); }
+    else err.style.display='block';
+  } else {
+    const stu=db.students.find(s=>s.roll===id&&s.password===pw);
+    if(stu){ if(rem) saveSess('stu',id); loginOK('stu',id); }
+    else err.style.display='block';
+  }
+}
+
+function loginOK(role,id){
+  if(role==='adm'){ const adm=ADMINS.find(a=>a.username===id); cur={role:'adm',id,admin:adm}; initAdmin(); show('pg-adm'); }
+  else { const stu=db.students.find(s=>s.roll===id); if(!stu){clearSess();show('pg-land');return;} cur={role:'stu',id,student:stu}; initStudent(stu); show('pg-stu'); }
+}
+function logout(){ clearSess(); cur=null; show('pg-land'); }
+
+// ══════════════════════════════════════════
+//  REGISTRATION (First-time student)
+// ══════════════════════════════════════════
+let regData = {};
+
+function startRegister(){
+  regData={};
+  // populate department dropdown
+  const depts=[...new Set(CLASSES.map(c=>c.dept))];
+  const dSel=document.getElementById('r-dept');
+  dSel.innerHTML='<option value="">Select department…</option>'+depts.map(d=>`<option value="${d}">${d}</option>`).join('');
+  document.getElementById('r-class').innerHTML='<option value="">Select class…</option>';
+  // reset steps
+  ['r-name','r-roll','r-pw1','r-pw2'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  ['r-s1-err','r-s2-err','r-s3-err'].forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display='none'; });
+  setRegStep(1);
+  show('pg-register');
+}
+
+function setRegStep(n){
+  document.querySelectorAll('.reg-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('reg-s'+n).classList.add('active');
+  document.querySelectorAll('.step-dot').forEach((d,i)=>d.classList.toggle('active',i<n));
+  document.getElementById('reg-progress').style.width=(n/3*100)+'%';
+}
+
+function showRegErr(stepId, msg){
+  const el=document.getElementById(stepId);
+  el.textContent=msg; el.style.display='block';
+}
+
+function regNext(step){
+  if(step===1){
+    const name=document.getElementById('r-name').value.trim();
+    const roll=document.getElementById('r-roll').value.trim();
+    document.getElementById('r-s1-err').style.display='none';
+    if(!name){ showRegErr('r-s1-err','Please enter your full name.'); return; }
+    if(!roll){ showRegErr('r-s1-err','Please enter your roll number.'); return; }
+    if(db.students.find(s=>s.roll===roll)){ showRegErr('r-s1-err','A student with this roll number already exists. Please log in instead.'); return; }
+    regData.name=name; regData.roll=roll;
+    setRegStep(2);
+  } else if(step===2){
+    const dept=document.getElementById('r-dept').value;
+    const cls=document.getElementById('r-class').value;
+    document.getElementById('r-s2-err').style.display='none';
+    if(!dept){ showRegErr('r-s2-err','Please select your department.'); return; }
+    if(!cls){ showRegErr('r-s2-err','Please select your class.'); return; }
+    regData.dept=dept; regData.classId=cls;
+    setRegStep(3);
+  }
+}
+
+function regBack(step){
+  setRegStep(step-1);
+}
+
+// Populate class dropdown when department changes
+document.getElementById('r-dept').addEventListener('change', function(){
+  const dept=this.value;
+  const classes=CLASSES.filter(c=>c.dept===dept);
+  const cSel=document.getElementById('r-class');
+  cSel.innerHTML='<option value="">Select class…</option>'+classes.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+});
+
+function regSubmit(){
+  const pw1=document.getElementById('r-pw1').value;
+  const pw2=document.getElementById('r-pw2').value;
+  document.getElementById('r-s3-err').style.display='none';
+  if(pw1.length<6){ showRegErr('r-s3-err','Password must be at least 6 characters.'); return; }
+  if(pw1!==pw2){ showRegErr('r-s3-err','Passwords do not match.'); return; }
+  const newStu={ roll:regData.roll, name:regData.name, classId:regData.classId, password:pw1, marks:[] };
+  db.students.push(newStu);
+  db.students.sort((a,b)=>a.roll.localeCompare(b.roll,undefined,{numeric:true}));
+  saveDB();
+  // Auto-login
+  cur={role:'stu',id:regData.roll,student:newStu};
+  saveSess('stu',regData.roll);
+  initStudent(newStu);
+  show('pg-stu');
+}
+
+// ══════════════════════════════════════════
+//  ADMIN NAV
+// ══════════════════════════════════════════
+const A_TITLES={dash:'Dashboard',classes:'Classes',scan:'Scan mark sheet',students:'Students',subjects:'Subjects',admins:'Admin accounts'};
+function aN(panel,el){
+  document.querySelectorAll('#adm-sb .ni').forEach(n=>n.classList.remove('on'));
+  el.classList.add('on');
+  document.querySelectorAll('#pg-adm .panel').forEach(p=>p.classList.remove('on'));
+  document.getElementById('adm-'+panel).classList.add('on');
+  document.getElementById('adm-tt').textContent=A_TITLES[panel]||panel;
+  closeSB('adm');
+  if(panel==='dash')     refreshDash();
+  if(panel==='students') { buildStuClassBar(); renderStudents(); }
+  if(panel==='subjects') renderSubjectPanel();
+  if(panel==='classes')  renderClassPanel();
+  if(panel==='scan')     populateScanClasses();
+  if(panel==='admins')   renderAdminPanel();
+}
+function initAdmin(){
+  const adm=cur.admin||ADMINS[0];
+  document.querySelector('#adm-sb .sb-user .nm').textContent = adm?adm.name:'Administrator';
+  document.querySelector('#adm-sb .sb-user .rl').textContent = adm?(adm.dept+' · Admin'):'Admin account';
+  const init=(adm&&adm.name)?adm.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase():'AD';
+  document.querySelector('#pg-adm .av').textContent=init;
+  refreshDash(); buildDashClassBar();
+}
+
+// ══════════════════════════════════════════
+//  CLASS BAR HELPERS
+// ══════════════════════════════════════════
+function getClassName(classId){
+  const c=CLASSES.find(x=>x.id===classId);
+  return c?c.name:'Unknown';
+}
+function getClassDept(classId){
+  const c=CLASSES.find(x=>x.id===classId);
+  return c?c.dept:'—';
+}
+
+function buildDashClassBar(){
+  activeAdminClass='all';
+  const bar=document.getElementById('dash-class-bar');
+  bar.innerHTML='<span class="class-bar-label">Class:</span>'
+    +'<button class="cls-pill all-pill active" onclick="setDashClass(\'all\',this)">All classes</button>'
+    +CLASSES.map(c=>`<button class="cls-pill" onclick="setDashClass('${c.id}',this)">${c.name}</button>`).join('');
+}
+function setDashClass(id,el){
+  activeAdminClass=id;
+  document.querySelectorAll('#dash-class-bar .cls-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  refreshDash();
+}
+
+function buildStuClassBar(){
+  activeStuClass='all';
+  const bar=document.getElementById('stu-class-bar');
+  bar.innerHTML='<span class="class-bar-label">Class:</span>'
+    +'<button class="cls-pill all-pill active" onclick="setStuClass(\'all\',this)">All classes</button>'
+    +CLASSES.map(c=>`<button class="cls-pill" onclick="setStuClass('${c.id}',this)">${c.name}</button>`).join('');
+}
+function setStuClass(id,el){
+  activeStuClass=id;
+  document.querySelectorAll('#stu-class-bar .cls-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  renderStudents();
+}
+
+// ══════════════════════════════════════════
+//  DASHBOARD
+// ══════════════════════════════════════════
+function avgPct(s){
+  const l=s.marks[s.marks.length-1]; if(!l) return 0;
+  const vals=SUBJECTS.map(sub=>l[sub.code]||0);
+  return vals.reduce((a,b)=>a+b,0)/vals.length;
+}
+function isPass(s){ return avgPct(s)>=35; }
+
+function refreshDash(){
+  let all=db.students;
+  if(activeAdminClass!=='all') all=all.filter(s=>s.classId===activeAdminClass);
+  const passed=all.filter(isPass).length;
+  const avg=all.length?(all.reduce((a,s)=>a+avgPct(s),0)/all.length).toFixed(1):'—';
+  document.getElementById('ds-tot').textContent  = all.length;
+  document.getElementById('ds-pass').textContent = passed;
+  document.getElementById('ds-fail').textContent = all.length-passed;
+  document.getElementById('ds-avg').textContent  = avg+(all.length?'%':'');
+  document.getElementById('dash-tb').innerHTML=all.map(s=>{
+    const last=s.marks[s.marks.length-1];
+    const ap=avgPct(s).toFixed(1);
+    const pass=isPass(s);
+    return `<tr><td class="rc">${s.roll}</td><td>${s.name}</td><td style="font-size:.78rem">${getClassName(s.classId)}</td><td>${last?last.exam:'—'}</td><td>${ap}%</td><td><span class="badge ${pass?'pass':'fail'}">${pass?'Pass':'Fail'}</span></td></tr>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+//  CLASSES MANAGEMENT
+// ══════════════════════════════════════════
+function renderClassPanel(){
+  const depts=[...new Set(CLASSES.map(c=>c.dept))];
+  document.getElementById('cls-count').textContent  = CLASSES.length;
+  document.getElementById('dept-count').textContent = depts.length;
+  document.getElementById('cls-stu-count').textContent = db.students.length;
+  const grid=document.getElementById('class-list-grid');
+  grid.innerHTML = CLASSES.map(c=>{
+    const stuCount=db.students.filter(s=>s.classId===c.id).length;
+    return `<div class="class-card">
+      <div>
+        <div class="cname">${c.name}</div>
+        <div class="csub">${c.dept} · ${c.year} · ${stuCount} student${stuCount!==1?'s':''}</div>
+      </div>
+      <div class="c-actions">
+        <button class="del-btn" onclick="deleteClass('${c.id}')" title="Delete class"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14H6L5,6"/><path d="M10,11v6M14,11v6"/><path d="M9,6V4h6v2"/></svg></button>
+      </div>
+    </div>`;
+  }).join('')
+  + `<div class="class-card class-card-add" onclick="toggleNewClassForm(true)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      Add new class
+    </div>`;
+}
+
+function toggleNewClassForm(open){
+  const f=document.getElementById('new-class-form');
+  f.classList.toggle('open',open);
+  if(open){ document.getElementById('nc-dept').focus(); }
+  else { document.getElementById('nc-dept').value=''; document.getElementById('nc-name').value=''; document.getElementById('nc-year').value=''; document.getElementById('nc-err').style.display='none'; }
+}
+
+function addClass(){
+  const dept=(document.getElementById('nc-dept').value||'').trim();
+  const name=(document.getElementById('nc-name').value||'').trim();
+  const year=(document.getElementById('nc-year').value||'').trim();
+  const err=document.getElementById('nc-err');
+  err.style.display='none';
+  if(!dept||!name){ err.textContent='Department and class name are required.'; err.style.display='block'; return; }
+  if(CLASSES.find(c=>c.name===name)){ err.textContent='A class with this name already exists.'; err.style.display='block'; return; }
+  const newCls={ id:'cls-'+Date.now(), dept, name, year:year||'—' };
+  CLASSES.push(newCls); saveCls();
+  toggleNewClassForm(false);
+  renderClassPanel(); buildDashClassBar(); buildStuClassBar();
+  populateScanClasses();
+  showClsMsg('suc','Class "'+name+'" added successfully.');
+}
+
+function deleteClass(id){
+  const cls=CLASSES.find(c=>c.id===id);
+  if(!cls) return;
+  const stuCount=db.students.filter(s=>s.classId===id).length;
+  const msg=stuCount>0
+    ? `Delete class "${cls.name}"? This class has ${stuCount} student(s). Their records will remain but will show "Unknown class".`
+    : `Delete class "${cls.name}"?`;
+  if(!confirm(msg)) return;
+  CLASSES=CLASSES.filter(c=>c.id!==id); saveCls();
+  renderClassPanel(); buildDashClassBar(); buildStuClassBar(); populateScanClasses();
+  showClsMsg('suc','Class deleted.');
+}
+
+function showClsMsg(type,msg){
+  const el=document.getElementById('cls-msg');
+  el.innerHTML=`<div class="smsg ${type}"><span>${msg}</span></div>`;
+  clearTimeout(el._t); el._t=setTimeout(()=>el.innerHTML='',4000);
+}
+
+function populateScanClasses(){
+  const sel=document.getElementById('sc-class');
+  if(!sel) return;
+  sel.innerHTML=CLASSES.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+}
+
+// ══════════════════════════════════════════
+//  STUDENTS
+// ══════════════════════════════════════════
+function renderStudents(){
+  const q=(document.getElementById('st-srch').value||'').toLowerCase();
+  const f=document.getElementById('st-filt').value;
+  let list=db.students.filter(s=>{
+    if(activeStuClass!=='all'&&s.classId!==activeStuClass) return false;
+    const p=isPass(s);
+    if(f==='pass'&&!p) return false;
+    if(f==='fail'&&p)  return false;
+    return s.roll.includes(q)||s.name.toLowerCase().includes(q);
+  });
+  const tb=document.getElementById('st-body');
+  tb.innerHTML=list.length?list.map(s=>{
+    const ap=avgPct(s).toFixed(1); const pass=isPass(s);
+    return `<tr>
+      <td class="rc">${s.roll}</td><td>${s.name}</td>
+      <td style="font-size:.78rem">${getClassName(s.classId)}</td>
+      <td style="font-size:.78rem">${getClassDept(s.classId)}</td>
+      <td>${ap}%</td>
+      <td><span class="badge ${pass?'pass':'fail'}">${pass?'Pass':'Fail'}</span></td>
+      <td style="white-space:nowrap">
+        <button class="btn" style="padding:3px 10px;font-size:.75rem;margin-right:4px" onclick="openMarksModal('${s.roll}')" title="Edit marks"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:3px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit</button>
+        <button class="del-btn" onclick="deleteStudent('${s.roll}')" title="Remove student"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14H6L5,6"/></svg></button>
+      </td>
+    </tr>`;
+  }).join(''):`<tr><td colspan="7" class="empty">No students found.</td></tr>`;
+}
+
+function deleteStudent(roll){
+  const stu=db.students.find(s=>s.roll===roll);
+  if(!stu||!confirm(`Remove student ${stu.name} (${roll})?`)) return;
+  db.students=db.students.filter(s=>s.roll!==roll);
+  saveDB(); renderStudents(); refreshDash();
+}
+
+// ══════════════════════════════════════════
+//  SUBJECT MANAGEMENT
+// ══════════════════════════════════════════
+function renderSubjectPanel(){
+  document.getElementById('subj-count-stat').textContent=SUBJECTS.length;
+  document.getElementById('subj-cnt-disp').textContent=SUBJECTS.length;
+  const entries=db.students.reduce((a,s)=>a+s.marks.length*SUBJECTS.length,0);
+  document.getElementById('subj-entries-stat').textContent=entries;
+  renderSubjectList();
+}
+function renderSubjectList(){
+  const list=document.getElementById('subj-list');
+  list.innerHTML=SUBJECTS.map((sub,i)=>{
+    const pp=Math.round(sub.pass/sub.max*100);
+    return `<div class="subj-row">
+      <input class="ci" type="text" value="${sub.code}" placeholder="CODE" maxlength="6" id="sc-${i}" oninput="this.value=this.value.toUpperCase()">
+      <input type="text" value="${sub.name}" placeholder="Subject name" id="sn-${i}">
+      <input type="number" value="${sub.max}" min="1" max="1000" id="sm-${i}" oninput="updPP(${i})">
+      <input type="number" value="${sub.pass}" min="0" id="sp-${i}" oninput="updPP(${i})" title="${pp}% of max">
+      <button class="del-btn" onclick="deleteSubject(${i})" title="Remove"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14H6L5,6"/><path d="M10,11v6M14,11v6"/><path d="M9,6V4h6v2"/></svg></button>
+    </div>`;
+  }).join('');
+}
+function updPP(i){
+  const mx=parseInt(document.getElementById('sm-'+i)?.value)||100;
+  const ps=parseInt(document.getElementById('sp-'+i)?.value)||0;
+  const inp=document.getElementById('sp-'+i);
+  if(inp) inp.title=Math.round(ps/mx*100)+'% of max';
+}
+function changeSubjCount(d){
+  const n=SUBJECTS.length+d;
+  if(n<1){showSubjMsg('wrn','Must have at least 1 subject.');return;}
+  if(n>20){showSubjMsg('wrn','Maximum 20 subjects.');return;}
+  if(d>0) for(let i=0;i<d;i++) SUBJECTS.push({code:'NEW',name:'New Subject',max:100,pass:35});
+  else SUBJECTS.splice(n);
+  renderSubjectPanel();
+}
+function addSubject(){
+  const code=(document.getElementById('new-code').value||'').trim().toUpperCase();
+  const name=(document.getElementById('new-name').value||'').trim();
+  const max=parseInt(document.getElementById('new-max').value)||100;
+  const pass=parseInt(document.getElementById('new-pass').value)||35;
+  if(!code||!name){showSubjMsg('err','Code and name required.');return;}
+  if(SUBJECTS.find(s=>s.code===code)){showSubjMsg('err','Code already exists.');return;}
+  if(SUBJECTS.length>=20){showSubjMsg('wrn','Maximum 20 subjects.');return;}
+  SUBJECTS.push({code,name,max,pass});
+  document.getElementById('new-code').value='';
+  document.getElementById('new-name').value='';
+  document.getElementById('new-max').value='100';
+  document.getElementById('new-pass').value='35';
+  renderSubjectPanel();
+  showSubjMsg('suc','"'+name+'" added. Click "Save all changes" to persist.');
+}
+function deleteSubject(i){
+  if(SUBJECTS.length<=1){showSubjMsg('wrn','Must have at least 1 subject.');return;}
+  if(!confirm('Remove subject "'+SUBJECTS[i].name+'"?')) return;
+  SUBJECTS.splice(i,1); renderSubjectPanel();
+  showSubjMsg('suc','Removed. Click "Save all changes" to persist.');
+}
+function saveSubjects(){
+  SUBJECTS.forEach((sub,i)=>{
+    const c=(document.getElementById('sc-'+i)?.value||'').trim().toUpperCase();
+    const n=(document.getElementById('sn-'+i)?.value||'').trim();
+    const m=parseInt(document.getElementById('sm-'+i)?.value)||sub.max;
+    const p=parseInt(document.getElementById('sp-'+i)?.value);
+    if(c) sub.code=c; if(n) sub.name=n;
+    if(m>0) sub.max=m;
+    if(!isNaN(p)&&p>=0) sub.pass=Math.min(p,m);
+  });
+  saveSubs(); renderSubjectPanel(); refreshDash();
+  showSubjMsg('suc','All subject settings saved. Pass/fail updated across the system.');
+}
+function showSubjMsg(type,msg){
+  const el=document.getElementById('subj-save-msg');
+  el.innerHTML=`<div class="smsg ${type}"><span>${msg}</span></div>`;
+  clearTimeout(el._t); el._t=setTimeout(()=>el.innerHTML='',4000);
+}
+
+// ══════════════════════════════════════════
+//  SCAN
+// ══════════════════════════════════════════
+function doDrag(e,on){ e.preventDefault(); document.getElementById('sc-drop').classList.toggle('over',on); }
+function doDrop(e){ e.preventDefault(); doDrag(e,false); const f=e.dataTransfer.files[0]; if(f) loadSF(f); }
+function onScanFile(e){ const f=e.target.files[0]; if(f) loadSF(f); }
+function loadSF(f){
+  scanFile=f;
+  const r=new FileReader();
+  r.onload=ev=>{
+    scanB64=ev.target.result.split(',')[1];
+    const p=document.getElementById('sc-prev'); p.src=ev.target.result; p.style.display='block';
+    document.getElementById('sc-btn').disabled=false;
+    setStat('sc-stat','inf','Image ready. Click "Extract marks with AI".');
+  };
+  r.readAsDataURL(f);
+}
+function clearScan(){
+  scanB64=null; scanFile=null; scanned=[];
+  document.getElementById('sc-prev').style.display='none';
+  document.getElementById('sc-file').value='';
+  document.getElementById('sc-btn').disabled=true;
+  document.getElementById('sc-stat').innerHTML='';
+  document.getElementById('sc-res-wrap').style.display='none';
+}
+function setStat(elId,type,msg,loading=false){
+  document.getElementById(elId).innerHTML=`<div class="smsg ${type}">${loading?'<div class="spin"></div>':''}<span>${msg}</span></div>`;
+}
+async function doScan(){
+  if(!scanB64) return;
+  setStat('sc-stat','inf','Scanning with AI…',true);
+  document.getElementById('sc-btn').disabled=true;
+  document.getElementById('sc-res-wrap').style.display='none';
+  const subjList=SUBJECTS.map(s=>`${s.code} (${s.name})`).join(', ');
+  const prompt=`You are an AI that reads student mark sheets from images.
+Extract ALL student records visible. For each student, detect their roll number, name (if visible), and marks for each subject.
+Subjects tracked: ${subjList}.
+Return ONLY a valid JSON array, no markdown. Example:
+[{"roll":"CS101","name":"Arun Kumar","MAT":78,"SCI":82,"ENG":74,"SOC":69,"CS":90}]
+If a subject mark is not visible for a student, omit that key. If no data visible, return: []`;
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:[
+        {type:'image',source:{type:'base64',media_type:scanFile.type||'image/jpeg',data:scanB64}},
+        {type:'text',text:prompt}
+      ]}]})
+    });
+    const data=await resp.json();
+    const raw=data.content.map(c=>c.text||'').join('');
+    const clean=raw.replace(/```json|```/g,'').trim();
+    const extracted=JSON.parse(clean);
+    if(!Array.isArray(extracted)||!extracted.length){
+      setStat('sc-stat','err','No student data found. Try a clearer photo.');
+      document.getElementById('sc-btn').disabled=false; return;
+    }
+    scanned=extracted;
+    const examName=document.getElementById('sc-exam').value;
+    setStat('sc-stat','suc',`Extracted ${extracted.length} student record(s). Review and save below.`);
+    document.getElementById('sc-res-title').textContent=`"${examName}" — ${extracted.length} student(s)`;
+    const tbody=document.getElementById('sc-res-body');
+    tbody.innerHTML=extracted.flatMap(s=>{
+      const rows=SUBJECTS.filter(sub=>s[sub.code]!==undefined);
+      return rows.map((sub,i)=>{
+        const m=s[sub.code]; const pct=Math.round(m/sub.max*100); const pass=m>=sub.pass;
+        return `<tr>
+          ${i===0?`<td class="rc" rowspan="${rows.length}">${s.roll}</td><td rowspan="${rows.length}">${s.name||'—'}</td>`:''}
+          <td>${sub.name}</td><td>${m}</td><td>${sub.max}</td><td>${pct}%</td>
+          <td><span class="badge ${pass?'pass':'fail'}">${pass?'Pass':'Fail'}</span></td>
+        </tr>`;
+      });
+    }).join('');
+    document.getElementById('sc-res-wrap').style.display='block';
+    document.getElementById('sc-btn').disabled=false;
+  }catch(e){
+    setStat('sc-stat','err','Error processing image. Please try again.');
+    document.getElementById('sc-btn').disabled=false;
+  }
+}
+function saveScanned(){
+  const examName=document.getElementById('sc-exam').value;
+  const classId=document.getElementById('sc-class').value;
+  scanned.forEach(s=>{
+    const roll=String(s.roll).trim();
+    let stu=db.students.find(x=>x.roll===roll);
+    if(!stu){ stu={roll,name:s.name||'Unknown',classId,password:'pass123',marks:[]}; db.students.push(stu); }
+    else if(s.name&&s.name!=='Unknown') stu.name=s.name;
+    const idx=stu.marks.findIndex(m=>m.exam===examName);
+    const entry={exam:examName};
+    SUBJECTS.forEach(sub=>{ if(s[sub.code]!==undefined) entry[sub.code]=s[sub.code]; });
+    if(idx>=0) stu.marks[idx]=entry; else stu.marks.push(entry);
+  });
+  db.students.sort((a,b)=>a.roll.localeCompare(b.roll,undefined,{numeric:true}));
+  saveDB();
+  setStat('sc-stat','suc',`Saved ${scanned.length} student record(s).`);
+  document.getElementById('sc-res-wrap').style.display='none';
+  scanned=[];
+}
+
+// ══════════════════════════════════════════
+//  STUDENT PORTAL
+// ══════════════════════════════════════════
+function initStudent(stu){
+  const init=stu.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('stu-sb-nm').textContent=stu.name;
+  document.getElementById('stu-sb-rl').textContent='Roll no. '+stu.roll;
+  document.getElementById('stu-av').textContent=init;
+  document.getElementById('stu-rav').textContent=init[0];
+  document.getElementById('stu-rname').textContent=stu.name;
+  const cls=CLASSES.find(c=>c.id===stu.classId);
+  document.getElementById('stu-rroll').textContent='Roll '+stu.roll+(cls?' · '+cls.name:'');
+  renderStuOv(stu); renderStuSubj(stu); renderStuHist(stu);
+}
+function sN(panel,el){
+  document.querySelectorAll('#pg-stu .ni').forEach(n=>n.classList.remove('on'));
+  el.classList.add('on','g');
+  document.querySelectorAll('#pg-stu .panel').forEach(p=>p.classList.remove('on'));
+  document.getElementById('stu-'+panel).classList.add('on');
+  const tt={ov:'My overview',subj:'Subject marks',hist:'Exam history'};
+  document.getElementById('stu-tt').textContent=tt[panel]||panel;
+  closeSB('stu');
+}
+function renderStuOv(stu){
+  const last=stu.marks[stu.marks.length-1]; if(!last) return;
+  const vals=SUBJECTS.map(s=>last[s.code]||0);
+  const total=vals.reduce((a,b)=>a+b,0);
+  const maxT=SUBJECTS.length*100;
+  const pct=(total/maxT*100).toFixed(1);
+  const pass=parseFloat(pct)>=35;
+  document.getElementById('stu-tot').textContent=total+' / '+maxT;
+  document.getElementById('stu-pct').textContent=pct+'%';
+  document.getElementById('stu-scount').textContent=SUBJECTS.length;
+  const sorted=[...db.students].sort((a,b)=>avgPct(b)-avgPct(a));
+  const rank=sorted.findIndex(s=>s.roll===stu.roll)+1;
+  document.getElementById('stu-rank').textContent=rank+' / '+db.students.length;
+  const ob=document.getElementById('stu-ob');
+  ob.textContent=pass?'Overall Pass':'Overall Fail'; ob.className='ob '+(pass?'pass':'fail');
+  document.getElementById('stu-sum-body').innerHTML=SUBJECTS.map(sub=>{
+    const m=last[sub.code]??'—';
+    const p2=m!=='—'?Math.round(m/sub.max*100):'—';
+    const ps=m!=='—'&&m>=sub.pass;
+    return `<tr><td>${sub.name}</td><td>${m}</td><td>${sub.max}</td><td>${p2}${m!=='—'?'%':''}</td><td>${sub.pass}</td><td><span class="badge ${ps?'pass':'fail'}">${ps?'Pass':'Fail'}</span></td></tr>`;
+  }).join('');
+}
+function renderStuSubj(stu){
+  const exams=stu.marks.map(m=>m.exam);
+  const tabs=document.getElementById('stu-etabs');
+  tabs.innerHTML=exams.map((e,i)=>`<button class="etab ${i===exams.length-1?'on':''}" onclick="switchET('${e}',this)">${e}</button>`).join('');
+  if(exams.length) showSG(stu,exams[exams.length-1]);
+}
+function switchET(exam,el){
+  document.querySelectorAll('.etab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  showSG(cur.student,exam);
+}
+function showSG(stu,exam){
+  const entry=stu.marks.find(m=>m.exam===exam);
+  const grid=document.getElementById('stu-sg');
+  if(!entry){grid.innerHTML='<div class="empty">No marks for this exam.</div>';return;}
+  grid.innerHTML=SUBJECTS.map(sub=>{
+    const m=entry[sub.code];
+    if(m===undefined) return `<div class="scard"><div class="sn">${sub.name}</div><div class="sm" style="color:var(--text3)">—</div><div class="spct">Not recorded</div></div>`;
+    const pct=Math.round(m/sub.max*100); const pass=m>=sub.pass;
+    return `<div class="scard ${pass?'pass':'fail'}">
+      <div class="sn">${sub.name}</div>
+      <div class="sm">${m}<span class="dn"> / ${sub.max}</span></div>
+      <div class="spct">${pct}% · <span style="color:${pass?'var(--green)':'var(--red)'}">${pass?'Pass':'Fail'}</span></div>
+      <div class="pb"><div class="pf ${pass?'pass':'fail'}" style="width:${pct}%"></div></div>
+    </div>`;
+  }).join('');
+}
+function renderStuHist(stu){
+  const tbody=document.getElementById('stu-hist-body');
+  if(!stu.marks.length){tbody.innerHTML='<tr><td colspan="5" class="empty">No exam records yet.</td></tr>';return;}
+  tbody.innerHTML=stu.marks.map(m=>{
+    const vals=SUBJECTS.map(s=>m[s.code]||0);
+    const total=vals.reduce((a,b)=>a+b,0);
+    const pct=(total/(SUBJECTS.length*100)*100).toFixed(1);
+    const pass=parseFloat(pct)>=35;
+    const yr=m.exam.match(/\d{4}/)?.[0]||'—';
+    return `<tr><td>${m.exam}</td><td>${yr}</td><td>${total} / ${SUBJECTS.length*100}</td><td>${pct}%</td><td><span class="badge ${pass?'pass':'fail'}">${pass?'Pass':'Fail'}</span></td></tr>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+//  SIDEBAR / MOBILE
+// ══════════════════════════════════════════
+function openSB(w){ document.getElementById(w+'-sb').classList.add('open'); document.getElementById(w===('adm')?'adm-ov':'stu-ov-el').classList.add('open'); }
+function closeSB(w){ document.getElementById(w+'-sb').classList.remove('open'); document.getElementById(w===('adm')?'adm-ov':'stu-ov-el').classList.remove('open'); }
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){
+    if(document.getElementById('pg-auth').classList.contains('active')) doLogin();
+  }
+});
+
+// ══════════════════════════════════════════
+//  BOOT — AUTO LOGIN
+// ══════════════════════════════════════════
+(function(){
+  populateScanClasses();
+  const s=loadSess(); if(!s) return;
+  if(s.role==='adm'){ const adm=ADMINS.find(a=>a.username===s.id); cur={role:'adm',id:s.id,admin:adm}; initAdmin(); show('pg-adm'); }
+  else { const stu=db.students.find(x=>x.roll===s.id); if(stu){ cur={role:'stu',id:s.id,student:stu}; initStudent(stu); show('pg-stu'); } else clearSess(); }
+})();
+// ══════════════════════════════════════════
+//  ADMIN REGISTRATION
+// ══════════════════════════════════════════
+function startAdminReg(){
+  ['ar-name','ar-user','ar-dept','ar-pw1','ar-pw2'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('ar-err').style.display='none';
+  show('pg-adm-reg');
+}
+
+function submitAdminReg(){
+  const name=(document.getElementById('ar-name').value||'').trim();
+  const user=(document.getElementById('ar-user').value||'').trim().toLowerCase();
+  const dept=(document.getElementById('ar-dept').value||'').trim();
+  const pw1=document.getElementById('ar-pw1').value;
+  const pw2=document.getElementById('ar-pw2').value;
+  const err=document.getElementById('ar-err');
+  err.style.display='none';
+
+  if(!name){ err.textContent='Please enter your full name.'; err.style.display='block'; return; }
+  if(!user){ err.textContent='Please choose a username.'; err.style.display='block'; return; }
+  if(!/^[a-z0-9._-]+$/.test(user)){ err.textContent='Username can only contain letters, numbers, dots, hyphens and underscores.'; err.style.display='block'; return; }
+  if(ADMINS.find(a=>a.username===user)){ err.textContent='That username is already taken. Please choose another.'; err.style.display='block'; return; }
+  if(!dept){ err.textContent='Please enter your department.'; err.style.display='block'; return; }
+  if(pw1.length<6){ err.textContent='Password must be at least 6 characters.'; err.style.display='block'; return; }
+  if(pw1!==pw2){ err.textContent='Passwords do not match.'; err.style.display='block'; return; }
+
+  const newAdm={ id:'adm-'+Date.now(), username:user, name, dept, password:pw1 };
+  ADMINS.push(newAdm); saveAdmins();
+  cur={role:'adm',id:user,admin:newAdm};
+  saveSess('adm',user);
+  initAdmin(); show('pg-adm');
+}
+
+// ══════════════════════════════════════════
+//  ADMIN MANAGEMENT PANEL
+// ══════════════════════════════════════════
+function renderAdminPanel(){
+  document.getElementById('adm-count-stat').textContent = ADMINS.length;
+  const list=document.getElementById('admin-list');
+  list.innerHTML=ADMINS.map(a=>{
+    const init=a.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    const isSelf=cur&&cur.id===a.username;
+    return `<div class="admin-card">
+      <div class="admin-av">${init}</div>
+      <div>
+        <div class="anm">${a.name}${isSelf?' <span style="font-size:.7rem;background:var(--al);color:var(--accent);padding:1px 7px;border-radius:99px">You</span>':''}</div>
+        <div class="adpt">${a.username} · ${a.dept}</div>
+      </div>
+      ${!isSelf?`<button class="del-btn adel" onclick="deleteAdmin('${a.id}')" title="Remove admin"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14H6L5,6"/></svg></button>`:''}
+    </div>`;
+  }).join('');
+}
+
+function deleteAdmin(id){
+  const adm=ADMINS.find(a=>a.id===id);
+  if(!adm) return;
+  if(ADMINS.length<=1){ showAdmMsg('wrn',"You can't remove the only admin account."); return; }
+  if(!confirm('Remove admin "'+adm.name+'" ('+adm.username+')?')) return;
+  ADMINS=ADMINS.filter(a=>a.id!==id); saveAdmins();
+  renderAdminPanel();
+  showAdmMsg('suc','Admin "'+adm.name+'" removed.');
+}
+
+function showAdmMsg(type,msg){
+  const el=document.getElementById('adm-list-msg');
+  el.innerHTML=`<div class="smsg ${type}"><span>${msg}</span></div>`;
+  clearTimeout(el._t); el._t=setTimeout(()=>el.innerHTML='',4000);
+}
+
+// ══════════════════════════════════════════
+//  MARKS EDITING MODAL
+// ══════════════════════════════════════════
+let editingRoll = null;
+
+function openMarksModal(roll){
+  const stu=db.students.find(s=>s.roll===roll);
+  if(!stu) return;
+  editingRoll=roll;
+  const cls=CLASSES.find(c=>c.id===stu.classId);
+  document.getElementById('mm-title').textContent='Edit marks — '+stu.name;
+  document.getElementById('mm-stuname').textContent=stu.name;
+  document.getElementById('mm-roll').textContent=stu.roll;
+  document.getElementById('mm-class').textContent=cls?cls.name:'Unknown';
+  document.getElementById('mm-new-exam').value='';
+  document.getElementById('mm-msg').innerHTML='';
+  populateExamSelector(stu);
+  document.getElementById('marks-modal').style.display='flex';
+  document.body.style.overflow='hidden';
+}
+
+function populateExamSelector(stu){
+  const sel=document.getElementById('mm-exam-sel');
+  if(!stu.marks.length){
+    sel.innerHTML='<option value="">No exams yet — add one below</option>';
+    document.getElementById('mm-marks-grid').innerHTML='<p style="font-size:.85rem;color:var(--text2);text-align:center;padding:1rem 0">Add an exam name below to start entering marks.</p>';
+    document.getElementById('mm-del-exam-btn').style.display='none';
+    return;
+  }
+  sel.innerHTML=stu.marks.map((m,i)=>`<option value="${i}">${m.exam}</option>`).join('');
+  sel.value=stu.marks.length-1;
+  document.getElementById('mm-del-exam-btn').style.display='inline-flex';
+  loadExamMarks();
+}
+
+function loadExamMarks(){
+  const stu=db.students.find(s=>s.roll===editingRoll);
+  if(!stu) return;
+  const idx=parseInt(document.getElementById('mm-exam-sel').value);
+  const entry=stu.marks[idx];
+  if(!entry){ document.getElementById('mm-marks-grid').innerHTML=''; return; }
+  document.getElementById('mm-marks-grid').innerHTML=SUBJECTS.map(sub=>{
+    const val=entry[sub.code]!==undefined?entry[sub.code]:'';
+    const pct=val!==''?Math.round(val/sub.max*100):null;
+    const pass=val!==''&&val>=sub.pass;
+    const passLabel=val!==''?`<div class="mef-pass ${pass?'ok':'no'}">${pct}% — ${pass?'Pass':'Fail'} (min ${sub.pass})</div>`:'';
+    return `<div class="mef">
+      <label>${sub.code} — ${sub.name}</label>
+      <input type="number" min="0" max="${sub.max}" value="${val}" id="me-${sub.code}" placeholder="0–${sub.max}" oninput="updateMarkHint('${sub.code}',${sub.max},${sub.pass})">
+      <div id="meh-${sub.code}" class="mef-pass ${pass?'ok':'no'}">${val!==''?`${pct}% — ${pass?'Pass':'Fail'} (min ${sub.pass})`:''}</div>
+    </div>`;
+  }).join('');
+}
+
+function updateMarkHint(code,max,passMin){
+  const inp=document.getElementById('me-'+code);
+  const hint=document.getElementById('meh-'+code);
+  if(!inp||!hint) return;
+  const v=parseFloat(inp.value);
+  if(isNaN(v)||inp.value===''){ hint.textContent=''; hint.className='mef-pass'; return; }
+  const pct=Math.round(v/max*100);
+  const pass=v>=passMin;
+  hint.textContent=pct+'% — '+(pass?'Pass':'Fail')+' (min '+passMin+')';
+  hint.className='mef-pass '+(pass?'ok':'no');
+}
+
+function addExamToStudent(){
+  const examName=(document.getElementById('mm-new-exam').value||'').trim();
+  const stu=db.students.find(s=>s.roll===editingRoll);
+  if(!stu||!examName){ showMMMsg('err','Please enter an exam name.'); return; }
+  if(stu.marks.find(m=>m.exam===examName)){ showMMMsg('err','An entry for "'+examName+'" already exists.'); return; }
+  stu.marks.push({exam:examName});
+  saveDB();
+  document.getElementById('mm-new-exam').value='';
+  populateExamSelector(stu);
+  // Select the new exam
+  const sel=document.getElementById('mm-exam-sel');
+  sel.value=stu.marks.length-1;
+  loadExamMarks();
+  showMMMsg('suc','Exam "'+examName+'" added. Enter marks and save.');
+}
+
+function saveEditedMarks(){
+  const stu=db.students.find(s=>s.roll===editingRoll);
+  if(!stu) return;
+  const idx=parseInt(document.getElementById('mm-exam-sel').value);
+  if(isNaN(idx)||!stu.marks[idx]){ showMMMsg('err','No exam selected.'); return; }
+  SUBJECTS.forEach(sub=>{
+    const inp=document.getElementById('me-'+sub.code);
+    if(!inp) return;
+    const v=inp.value.trim();
+    if(v===''){ delete stu.marks[idx][sub.code]; return; }
+    const n=parseFloat(v);
+    if(!isNaN(n)&&n>=0&&n<=sub.max) stu.marks[idx][sub.code]=n;
+    else if(!isNaN(n)&&n>sub.max){ stu.marks[idx][sub.code]=sub.max; inp.value=sub.max; }
+  });
+  saveDB();
+  showMMMsg('suc','Marks saved successfully for "'+stu.marks[idx].exam+'".');
+  // refresh student table and dashboard without closing modal
+  renderStudents(); refreshDash();
+}
+
+function deleteExamEntry(){
+  const stu=db.students.find(s=>s.roll===editingRoll);
+  if(!stu) return;
+  const idx=parseInt(document.getElementById('mm-exam-sel').value);
+  if(isNaN(idx)||!stu.marks[idx]) return;
+  if(!confirm('Delete exam "'+stu.marks[idx].exam+'" for '+stu.name+'? This cannot be undone.')) return;
+  stu.marks.splice(idx,1);
+  saveDB(); populateExamSelector(stu);
+  showMMMsg('suc','Exam deleted.');
+  renderStudents(); refreshDash();
+}
+
+function showMMMsg(type,msg){
+  const el=document.getElementById('mm-msg');
+  el.innerHTML=`<div class="smsg ${type}" style="margin-bottom:.75rem"><span>${msg}</span></div>`;
+  clearTimeout(el._t); el._t=setTimeout(()=>el.innerHTML='',4000);
+}
+
+function closeMarksModal(e){
+  if(e&&e.target!==document.getElementById('marks-modal')) return;
+  document.getElementById('marks-modal').style.display='none';
+  document.body.style.overflow='';
+  editingRoll=null;
+}
+
+</script>
+</body>
+</html>
